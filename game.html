@@ -1,0 +1,416 @@
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>JSQuiz</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+        <link rel="stylesheet" href="css/style.css">
+
+        <!-- ═══ SCRIPT : Thème sauvegardé en localStorage, appliqué avant le rendu pour éviter un flash ═══ -->
+        <script>
+            (function(){
+                var t = localStorage.getItem('jsquiz-theme');
+                if (t) document.documentElement.setAttribute('data-theme', t);
+                else document.documentElement.setAttribute('data-theme', 'dark');
+            })();
+        </script>
+    </head>
+    <body>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+            SECTION 1 : SPLASH — Écran de chargement initial avec le hibou
+        ═══════════════════════════════════════════════════════════════ -->
+        <section class="screen-section" id="splashSection">
+            <div class="splash" id="splash">
+                <!-- Flash blanc au démarrage -->
+                <div class="splash-flash"></div>
+                <div class="splash-owl">
+                    <!-- Particules décoratives autour du hibou -->
+                    <div class="splash-particles">
+                        <div class="splash-particle" style="background:#7c3aff; top:0; left:50%; animation-delay:0s"></div>
+                        <div class="splash-particle" style="background:#9f6fff; top:15%; left:85%; animation-delay:.5s"></div>
+                        <div class="splash-particle" style="background:#22d48e; top:50%; left:95%; animation-delay:1s"></div>
+                        <div class="splash-particle" style="background:#f59e0b; top:85%; left:70%; animation-delay:1.5s"></div>
+                        <div class="splash-particle" style="background:#ff5c7a; top:70%; left:10%; animation-delay:2s"></div>
+                        <div class="splash-particle" style="background:#7c3aff; top:30%; left:0%; animation-delay:2.5s"></div>
+                        <div class="splash-particle" style="background:#c4aaff; top:5%; left:25%; animation-delay:.8s"></div>
+                        <div class="splash-particle" style="background:#22d48e; top:90%; left:40%; animation-delay:1.3s"></div>
+                    </div>
+                    <!-- Image du hibou mascotte -->
+                    <img src="assets/images/image.png" alt="Hibou">
+                    <!-- Nom de l'application -->
+                    <div class="splash-tagline">
+                        <span><span class="js">JS</span>Quiz</span>
+                    </div>
+                    <!-- Barre de progression du chargement -->
+                    <div class="splash-progress">
+                        <div class="splash-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+            SECTION 2 : PSEUDO — Saisie du pseudo du joueur + sons d'ambiance
+        ═══════════════════════════════════════════════════════════════ -->
+        <section class="screen-section" id="pseudoSection">
+            
+            <!-- ═══ FICHIERS AUDIO : Musique de fond pour chaque contexte ═══ -->
+            <!-- Audio du menu principal -->
+            <audio id="bgMenu" loop preload="auto">
+                <source src="assets/sounds/menu.mp3" type="audio/mpeg">
+            </audio>
+            <!-- Audio pendant le jeu -->
+            <audio id="bgPlay" loop preload="auto">
+                <source src="assets/sounds/play.mp3" type="audio/mpeg">
+            </audio>
+            <!-- Audio de victoire -->
+            <audio id="bgWin" loop preload="auto">
+                <source src="assets/sounds/win.wav" type="audio/mpeg">
+            </audio>
+
+            <!-- ═══ DÉCOR : Blobs lumineux flottants en arrière-plan ═══ -->
+            <div class="glow-blob g1"></div>
+            <div class="glow-blob g2"></div>
+
+            <!-- ═══ BOUTON THÈME : Basculer clair/sombre (flottant) ═══ -->
+            <button class="theme-toggle theme-float" id="themeTogglePseudo" title="Changer le thème">
+                <i class="fa-solid fa-sun icon-sun"></i>
+                <i class="fa-solid fa-moon icon-moon"></i>
+            </button>
+
+            <!-- ═══ CARTE PRINCIPALE : Logo + champ pseudo + bouton commencer ═══ -->
+            <div class="pseudo-card">
+                <div class="pseudo-logo">
+                    <div class="top-bar-logo"><span class="js">JS</span>Quiz</div>
+                </div>
+                <p class="pseudo-sub">Entrez votre pseudo pour commencer</p>
+                <div class="input-zone">
+                    <!-- Champ de saisie du pseudo avec icône utilisateur -->
+                    <div class="field">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="pseudoInput" placeholder="Votre pseudo..." maxlength="20" autocomplete="off" aria-label="Pseudo">
+                    </div>
+                    <!-- Bouton pour lancer l'aventure -->
+                    <button class="btn-start" id="btnStartLanding">
+                        Commencer
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+            SECTION 3 : JEU — Toute l'interface de jeu (niveaux, exercices, résultats)
+        ═══════════════════════════════════════════════════════════════ -->
+        <section class="screen-section" id="gamePage" style="display:none">
+
+            <!-- ═══ CANVAS : Fond animé avec étoiles ═══ -->
+            <canvas id="starfield"></canvas>
+
+            <!-- ═══ DÉCOR : Blobs lumineux flottants en arrière-plan ═══ -->
+            <div class="glow-blob g1"></div>
+            <div class="glow-blob g2"></div>
+            <div class="glow-blob g3"></div>
+
+            <!-- ═══════════════════════════════════════════════════════════════
+                MODALES : Fenêtres superposées pour aides, confirmations, verrous
+            ═══════════════════════════════════════════════════════════════ -->
+            <div class="m-overlay" id="mOverlay">
+                <div class="m-box">
+
+                    <!-- Modale : Comment jouer — Explication des 4 types d'exercices et du scoring -->
+                    <div class="m-content hidden" id="modalHelp">
+                        <div class="m-icon" style="background:rgba(124,58,255,.1);color:var(--purple-l);border:1px solid rgba(124,58,255,.2)"><i class="fa-solid fa-circle-question"></i></div>
+                        <h3>Comment jouer ?</h3>
+                        <p> <strong style="color:var(--fg)">Quiz</strong> — Choix multiples avec minuterie.<br><br>
+                            <strong style="color:var(--fg)">Association</strong> — Reliez concepts et définitions.<br><br>
+                            <strong style="color:var(--fg)">Complétion</strong> — Remplissez les zones vides.<br><br>
+                            <strong style="color:var(--fg)">Débogage</strong> — Trouvez l'erreur.<br><br>
+
+                            Bonne réponse = <strong style="color:var(--fg)">+20 ⭐</strong><br>
+                            <span style="color:var(--amber)">Combo x3+ = bonus !</span><br>
+                            <span style="color:var(--danger)">Passer = -5 ⭐</span> &nbsp;
+                            <span style="color:var(--danger)">Aide hibou = -5 ⭐</span><br>
+                            <span style="color:var(--green)">Session parfaite = +30 ⭐ bonus !</span><br><br>
+                            Cliquez le hibou pendant le jeu pour un indice. 
+                        </p>
+                        <div class="m-actions">
+                            <button class="mbtn primary" data-close-modal>Compris</button>
+                        </div>
+                    </div>
+
+                    <!-- Modale : Quitter — Confirmation avant d'abandonner un exercice en cours -->
+                    <div class="m-content hidden" id="modalQuit">
+                        <div class="m-icon" style="background:rgba(255,92,122,.08);color:var(--danger);border:1px solid rgba(255,92,122,.15)"><i class="fa-solid fa-right-from-bracket"></i></div>
+                        <h3>Quitter l'exercice ?</h3>
+                        <p>Votre progression en cours sera perdue.</p>
+                        <div class="m-actions">
+                            <button class="mbtn ghost" data-close-modal>Annuler</button>
+                            <button class="mbtn danger" id="modalQuitConfirm">Quitter</button>
+                        </div>
+                    </div>
+
+                    <!-- Modale : Niveau verrouillé — Message quand le joueur tente un niveau non débloqué -->
+                    <div class="m-content hidden" id="modalLocked">
+                        <div class="m-icon" style="background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border)">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        <h3>Niveau Verrouillé</h3>
+                        <p>Terminez le niveau précédent pour débloquer celui-ci.</p>
+                        <div class="m-actions">
+                            <button class="mbtn ghost" data-close-modal>Fermer</button>
+                            <button class="mbtn primary" id="modalLockedGo">Niveau 1</button>
+                        </div>
+                    </div>
+
+                    <!-- Modale : Réinitialiser — Confirmation avant effacement de toute la progression -->
+                    <div class="m-content hidden" id="modalReset">
+                        <div class="m-icon" style="background:rgba(255,92,122,.08);color:var(--danger);border:1px solid rgba(255,92,122,.15)"><i class="fa-solid fa-rotate-left"></i></div>
+                        <h3>Réinitialiser ?</h3>
+                        <p>Supprimer toute votre progression ? Cette action est Irréversible.</p>
+                        <div class="m-actions">
+                            <button class="mbtn ghost" data-close-modal>Annuler</button>
+                            <button class="mbtn danger" id="modalResetConfirm">Réinitialiser</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ═══ BOUTON QUITTER : Flottant, visible pendant les exercices ═══ -->
+            <button class="quit-float hidden" id="quitFloat">
+                <i class="fa-solid fa-right-from-bracket"></i> Quitter
+            </button>
+
+            <!-- ═══ CONTENEUR PRINCIPAL : Nav + tous les écrans de jeu ═══ -->
+            <div class="wrap">
+
+                <!-- ═══ BARRE DE NAVIGATION : Logo + actions (thème, musique, aide, reset) ═══ -->
+                <nav id="mainNav">
+                    <div class="top-bar-logo"><span class="js">JS</span>Quiz</div>
+
+                    <div class="top-bar-actions">
+                        <!-- Basculer thème clair/sombre -->
+                        <button class="theme-toggle" id="themeToggleGame" title="Changer le thème">
+                            <i class="fa-solid fa-sun icon-sun"></i>
+                            <i class="fa-solid fa-moon icon-moon"></i>
+                        </button>
+                        <!-- Activer/désactiver la musique -->
+                        <button class="icon-btn music-on" id="musicBtn" title="Musique">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <!-- Ouvrir la modale d'aide -->
+                        <button class="icon-btn" id="helpBtn" title="Aide">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </button>
+                        <!-- Ouvrir la modale de réinitialisation -->
+                        <button class="icon-btn" id="resetBtn" title="Réinitialiser">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </nav>
+
+                <!-- ═══════════════════════════════════════════════════════════════
+                    ÉCRAN 1 : NIVEAUX — Grille des 6 niveaux + statistiques du joueur
+                ═══════════════════════════════════════════════════════════════ -->
+                <div id="screen-levels" class="screen active">
+                    <main class="levels-page">
+                        <!-- En-tête : Bannière de bienvenue avec mascotte et nom du joueur -->
+                        <div class="page-header">
+                            <div class="welcome-banner">
+                                <img src="assets/images/profile.png" alt="Hibou" class="welcome-mascot">
+                                <div class="welcome-info">
+                                    <span class="welcome-sub">Bienvenue,</span>
+                                    <span class="welcome-name" id="playerName"></span>
+                                </div>
+                            </div>
+                            <h1 class="page-title">Choisissez votre <em>niveau</em></h1>
+                            <p class="page-desc">Chaque niveau couvre un thème clé de JavaScript. Progressez étape par étape.</p>
+                        </div>
+                        <!-- Barre de statistiques : Étoiles, Pièces, Niveaux complétés -->
+                        <div class="stats-bar">
+                            <div class="stat-item">
+                                <div class="stat-icon si-star"><i class="fa-solid fa-star"></i></div>
+                                <div class="stat-text">
+                                    <span class="stat-val" id="starCount">0</span>
+                                    <span class="stat-label">Etoiles</span>
+                                </div>
+                            </div>
+                            <div class="stat-sep"></div>
+                            <div class="stat-item">
+                                <div class="stat-icon si-coin"><i class="fa-solid fa-coins"></i></div>
+                                <div class="stat-text">
+                                    <span class="stat-val" id="coinCount">0</span>
+                                    <span class="stat-label">Pièces</span>
+                                </div>
+                            </div>
+                            <div class="stat-sep"></div>
+                            <div class="stat-item">
+                                <div class="stat-icon si-lvl"><i class="fa-solid fa-layer-group"></i></div>
+                                <div class="stat-text">
+                                    <span class="stat-val" id="levelsDone">0 / 6</span>
+                                    <span class="stat-label">Niveaux complétés</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Grille des niveaux (générée dynamiquement par JS) -->
+                        <div class="levels-grid" id="levelsGrid"></div>
+                    </main>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════════════════
+                    ÉCRAN 2 : INTRO — Présentation du niveau avec ses 4 sessions
+                ═══════════════════════════════════════════════════════════════ -->
+                <div id="screen-intro" class="screen">
+                    <!-- Bouton retour vers la grille des niveaux -->
+                    <button class="intro-back" id="introBack">
+                        <i class="fa-solid fa-arrow-left"></i> Retour
+                    </button>
+                    <div class="intro-body" id="introBody">
+                        <!-- Titre et description du niveau (remplis dynamiquement) -->
+                        <h1 class="intro-title" id="introTitle">Niveau 1 : <em>Introduction à JavaScript</em></h1>
+                        <p class="intro-desc" id="introDesc">Histoire, caractéristiques, ECMAScript et utilisations de JavaScript.</p>
+                        <!-- Grille des 4 types de sessions du niveau -->
+                        <div class="type-grid">
+                            <div class="type-card">
+                                <div class="type-card-head">
+                                    <h3>Session 1 : Quiz</h3>
+                                </div>
+                                <p>Questions à choix multiples.</p>
+                            </div>
+                            <div class="type-card">
+                                <div class="type-card-head">
+                                    <h3>Session 2 : Association</h3>
+                                </div>
+                                <p>Reliez les concepts à leurs définitions.</p>
+                            </div>
+                            <div class="type-card">
+                                <div class="type-card-head">
+                                    <h3>Session 3 : Complétion</h3>
+                                </div>
+                                <p>Complétez les extraits de code.</p>
+                            </div>
+                            <div class="type-card">
+                                <div class="type-card-head">
+                                    <h3>Session 4 : Débogage</h3>
+                                </div>
+                                <p>Identifiez l'erreur dans le code.</p>
+                            </div>
+                        </div>
+                        <!-- Toggle pour activer/désactiver le minuteur -->
+                        <div class="timer-toggle-wrap">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="timerToggle" checked>
+                                <span class="toggle-track">
+                                    <span class="toggle-thumb"></span>
+                                </span>
+                                <span class="toggle-text">Désactiver le minuteur </span>
+                            </label>
+                            <span class="toggle-hint"></span>
+                        </div>
+                        <!-- Bouton pour lancer le niveau -->
+                        <button class="btn-amber" id="btnStartEx">Commencer le niveau </button>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════════════════
+                    ÉCRAN 3 : QUIZ — Exercice à choix multiples avec minuterie
+                ═══════════════════════════════════════════════════════════════ -->
+                <div id="screen-quiz" class="screen">
+                    <!-- En-tête de l'exercice (numéro, score, timer, combo) -->
+                    <div class="ex-header" id="quizHeader"></div>
+                    <!-- Contexte / énoncé de la question -->
+                    <div class="ex-context" id="quizContext"></div>
+                    <!-- Corps de l'exercice (options de réponse) -->
+                    <div class="ex-body" id="quizBody"></div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════════════════
+                    ÉCRAN 4 : ASSOCIATION — Exercice de liaison concept/définition
+                ═══════════════════════════════════════════════════════════════ -->
+                <div id="screen-assoc" class="screen">
+                    <div class="ex-header" id="assocHeader"></div>
+                    <div class="ex-context" id="assocContext"></div>
+                    <div class="ex-body" id="assocBody"></div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════════════════
+                    ÉCRAN 5 : COMPLÉTION — Exercice à trous dans du code
+                ═══════════════════════════════════════════════════════════════ -->
+                <div id="screen-comp" class="screen">
+                    <div class="ex-header" id="compHeader"></div>
+                    <div class="ex-context" id="compContext"></div>
+                    <div class="ex-body" id="compBody"></div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════════════════
+                    ÉCRAN 6 : DÉBOGAGE — Exercice de recherche d'erreur dans le code
+                ═══════════════════════════════════════════════════════════════ -->
+                <div id="screen-debug" class="screen">
+                    <div class="ex-header" id="debugHeader"></div>
+                    <div class="ex-context" id="debugContext"></div>
+                    <div class="ex-body" id="debugBody"></div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════════════════
+                    ÉCRAN 7 : RÉSULTAT — Affichage du score et des étoiles après une session
+                ═══════════════════════════════════════════════════════════════ -->
+                <div id="screen-result" class="screen">
+                    <!-- En-tête conservant le contexte du niveau -->
+                    <div class="ex-header" id="resultHeader"></div>
+
+                    <div class="result-body">
+                        <div class="result-card">
+                            <!-- Icône / image de résultat selon la performance -->
+                            <div class="result-type-icon" id="resultIcon">
+                                <img src="" alt="Résultat" style="width:100%;height:100%;object-fit:contain;border-radius:16px">
+                            </div>
+
+                            <!-- Label du type d'exercice terminé -->
+                            <h2 class="result-label" id="resultLabel"></h2>
+
+                            <!-- Score en étoiles obtenu -->
+                            <div class="result-score" id="resultScore">
+                                0 <span>⭐</span>
+                            </div>
+
+                            <!-- Affichage visuel des étoiles gagnées -->
+                            <div class="result-stars" id="resultStars"></div>
+
+                            <!-- Message de encouragement ou d'échec -->
+                            <p class="result-msg" id="resultMsg"></p>
+
+                            <!-- Boutons d'action : Réessayer, Quitter, Continuer -->
+                            <div class="result-btns">
+                                <button class="result-retry hidden" id="retryBtn">
+                                    <i class="fa-solid fa-arrow-rotate-left"></i> Réessayer
+                                </button>
+
+                                <button class="result-quit hidden" id="resultQuitBtn">
+                                    <i class="fa-solid fa-right-from-bracket"></i> Quitter
+                                </button>
+
+                                <button class="result-btn" id="resBtn">
+                                    Continuer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+            </div>
+        </section>
+
+        <!-- ═══ TOASTS : Conteneur pour les notifications inline (haut de page) ═══ -->
+        <div class="toasts" id="globalToasts"></div>
+
+        <!-- ═══ SCRIPTS : Fichier des questions + Logique principale de l'application ═══ -->
+        <script src="js/questions.js"></script>
+        <script src="js/script.js"></script>
+    </body>
+</html>

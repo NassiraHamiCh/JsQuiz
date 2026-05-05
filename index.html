@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+ <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>JSQuiz</title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+        <link rel="stylesheet" href="css/style.css">
+        
+    </head>
+    <body>
+
+        <canvas id="starfield"></canvas>
+        <div class="glow-blob g1"></div>
+        <div class="glow-blob g2"></div>
+
+        <div class="landing-page">
+
+            <!-- LANDING NAV -->
+            <nav id="landingNav">
+                <div class="top-bar-logo">
+                    <span class="js">JS</span>Quiz
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#hero">Accueil</a></li>
+                    <li><a href="#objectif">Objectif</a></li>
+                    <li><a href="#how">Comment jouer</a></li>
+                    <li><a href="#about">À propos</a></li>
+                </ul>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+                    <i class="fa-solid fa-sun icon-sun"></i>
+                    <i class="fa-solid fa-moon icon-moon"></i>
+                </button>
+            </nav>
+
+            <!-- HERO -->
+            <header class="hero" id="hero">
+                <div class="hero-left anim-fade" data-anim="0">
+                    <h1>Nassira <em>HamiCh</em><br>
+                    <span style="font-size: 2.8rem;">Étudiante en IIA</span>
+                    </h1>
+                    <p class="hero-sub">
+                        Évaluez et renforcez votre expertise en JavaScript. 
+                        Des concepts fondamentaux aux fonctionnalités avancées, 
+                        transformez vos connaissances théoriques en maîtrise pratique.
+                    </p>
+                    <div class="card-info anim-fade" data-anim="300">
+                        <div class="info-row">
+                            <span>Réalisé par : <strong>Nassira Hamich</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span>Filière : Informatique et Intelligence Artificielle</span>
+                        </div>
+                        <div class="info-row">
+                            <span>Encadré par : <strong>Pr. Farida BOUROUMANE</strong></span>
+                        </div>
+                        <div class="info-row">
+                            <span>Module : <strong>Programmation Web 2 — JavaScript</strong></span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span>Établissement : Faculté Pluridisciplinaire de Nador</span>
+                        </div>
+                        
+                        <div class="info-row">
+                            <span>Année universitaire : 2025 / 2026</span>
+                        </div>
+                    </div>
+                    <a href="game.html" class="btn-start anim-fade" data-anim="450" style="text-decoration: none;">
+                        Lancer le quiz
+                    </a>
+                </div>
+                <div class="hero-right anim-fade" data-anim="200">
+                    <div class="owl-frame">
+                        <div class="owl-ring"></div>
+                        <div class="owl-img-wrap">
+                            <img src="assets/images/photo.png" alt="Nassira Hamich" loading="eager">
+                        </div>
+                    </div>
+                    <div class="chip chip-1">IIA</div>
+                    <div class="chip chip-2">Nassira Hamich</div>
+                    <div class="chip chip-3">JS</div>
+                </div>
+            </header>
+
+            <div class="divider"></div>
+
+            <!-- OBJECTIF -->
+            <section class="section" id="objectif" aria-labelledby="otitle">
+                <div class="section-head">
+                    <h2 class="section-title" id="otitle">Objectif <span>du projet</span></h2>
+                    <p class="section-desc">Pourquoi ce quiz existe et ce qu'il apporte à l'apprentissage de JavaScript.</p>
+                </div>
+                <div class="about-grid">
+                    <div class="about-card" data-d="0">
+                        <div class="ac-head"><h3>Problématique</h3></div>
+                        <p>L'apprentissage de JavaScript souffre d'un manque d'outils interactifs adaptés au contexte universitaire marocain. Les étudiants ont besoin d'une plateforme qui évalue leurs connaissances de manière progressive et ludique.</p>
+                    </div>
+                    <div class="about-card" data-d="100">
+                        <div class="ac-head"><h3>Solution proposée</h3></div>
+                        <p>JSQuiz propose des exercices variés — QCM, association, complétion et débogage de code — organisés par niveaux. Chaque réponse est suivie d'une explication pour consolider l'apprentissage.</p>
+                    </div>
+                    <div class="about-card" data-d="200">
+                        <div class="ac-head"><h3>Public cible</h3></div>
+                        <p>Étudiants de la filière Informatique et Intelligence Artificielle, du débutant à l'avancé. Le système de niveaux s'adapte à chaque profil pour une progression efficace.</p>
+                    </div>
+                    <div class="about-card" data-d="300">
+                        <div class="ac-head"><h3>Compétences visées</h3></div>
+                        <ul>
+                            <li><strong>Niveau 1 :</strong> Introduction à JavaScript</li>
+                            <li><strong>Niveau 2 :</strong> Fondamentaux de JavaScript</li>
+                            <li><strong>Niveau 3 :</strong> Les Fonctions</li>
+                            <li><strong>Niveau 4 :</strong> Objets & Tableaux</li>
+                            <li><strong>Niveau 5 :</strong> DOM en JavaScript</li>
+                            <li><strong>Niveau 6 :</strong> Événements, POO, jQuery & AJAX</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- COMMENT JOUER -->
+            <section class="section" id="how" aria-labelledby="htitle">
+                <div class="section-head">
+                    <h2 class="section-title" id="htitle">Comment <span>jouer</span></h2>
+                    <p class="section-desc">4 étapes simples pour commencer.</p>
+                </div>
+                <div class="how-layout">
+                    <div class="steps-grid steps-grid-3">
+                        <div class="step" data-d="0">
+                            <div class="step-n">1</div>
+                            <h3>Entrez votre pseudo</h3>
+                            <p>Choisissez un nom pour attacher vos scores.</p>
+                        </div>
+                        <div class="step" data-d="120">
+                            <div class="step-n">2</div>
+                            <h3>Choisissez un niveau</h3>
+                            <p>Débutant, Intermédiaire ou Difficile.</p>
+                        </div>
+                        <div class="step" data-d="240">
+                            <div class="step-n">3</div>
+                            <h3>Répondez aux questions</h3>
+                            <p>Lisez le code et sélectionnez la bonne réponse.</p>
+                        </div>
+                        <div class="step" data-d="360">
+                            <div class="step-n">4</div>
+                            <h3>Consultez vos résultats</h3>
+                            <p>Score détaillé et pistes de progression.</p>
+                        </div>
+                    </div>
+                    <div class="how-owl">
+                        <!-- <div class="how-owl-ring"></div> -->
+                        <div class="section-owl-img">
+                            <img src="assets/images/owl-icon.png" alt="Mascotte" class="how-owl-img">
+                        </div>
+                        <div class="how-owl-tag">
+                            Suivez le guide
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- À PROPOS -->
+            <section class="section" id="about" aria-labelledby="atitle">
+                <div class="section-head">
+                    <h2 class="section-title" id="atitle">À propos <span>du jeu</span></h2>
+                    <p class="section-desc">Tout ce qu'il faut savoir sur le fonctionnement technique.</p>
+                </div>
+                <div class="about-grid">
+
+                    <div class="about-card" data-d="0">
+                        <div class="ac-head"><h3>Niveaux de difficulté</h3></div>
+                        <p>6 niveaux répartis en 3 paliers progressifs :</p>
+                        <ul style="list-style: none; padding-left: 0; margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                            <li>
+                                <span class="lchip beg">Débutant</span> 
+                                <span style="font-size: 0.9rem; color: var(--muted); margin-left: 8px;">(Niveaux 1 & 2)</span>
+                            </li>
+                            <li>
+                                <span class="lchip int">Intermédiaire</span> 
+                                <span style="font-size: 0.9rem; color: var(--muted); margin-left: 8px;">(Niveaux 3 & 4)</span>
+                            </li>
+                            <li>
+                                <span class="lchip adv">Difficile</span> 
+                                <span style="font-size: 0.9rem; color: var(--muted); margin-left: 8px;">(Niveaux 5 & 6)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="about-card" data-d="100">
+                        <div class="ac-head"><h3>Types d'exercices</h3></div>
+                        <ul>
+                            <li>QCM classique</li>
+                            <li>Association d'éléments</li>
+                            <li>Complétion de code</li>
+                            <li>Débogage de code</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-card" data-d="200">
+                        <div class="ac-head"><h3>Technologies utilisées</h3></div>
+                        <ul>
+                            <li>HTML5 sémantique</li>
+                            <li>CSS3 : variables, Grid, animations</li>
+                            <li>JavaScript vanilla (ES6+)</li>
+                        </ul>
+                    </div>
+                    <div class="about-card" data-d="300">
+                        <div class="ac-head"><h3>Système de scoring</h3></div>
+                        <ul>
+                            <li>Points par difficulté</li>
+                            <li>Bonus de temps</li>
+                            <li>Historique sauvegardé</li>
+                            <li>Classement visible</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer>
+                <p><strong>JSQuiz</strong> — Projet de Programmation Web 2 : JavaScript</p>
+                <p>Encadré par Pr. Farida BOUROUMANE · FPN · IIA · 2025/2026</p>
+                <p style="margin-top:.4rem; font-size:.73rem; color:var(--muted)">Conçu et développé par Nassira Hamich</p>
+            </footer>
+        </div>
+
+        <script src="js/landing.js"></script>
+
+    </body>
+</html>
