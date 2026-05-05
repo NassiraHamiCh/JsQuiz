@@ -61,7 +61,7 @@ Chaque niveau contient **4 sessions**, une par type d'exercice :
 
 ## Captures d'écran
 
-![Écran d'accueil](assets/images/image.png)
+![Écran d'accueil](assets/images/CAPTURE-JSQUIZ.png)
 
 > D'autres captures seront ajoutées prochainement.
 
@@ -131,7 +131,7 @@ Filière Informatique et Intelligence Artificielle — FPN
 
 Encadré par : **Pr. Farida BOUROUMANE**  
 Module : Programmation Web 2 — JavaScript  
-Année universitaire : 2024 / 2025
+Année universitaire : 2025 / 2026
 
 ---
 
